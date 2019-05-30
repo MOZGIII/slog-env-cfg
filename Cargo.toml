@@ -3,6 +3,11 @@ name = "slog-env-cfg"
 version = "0.1.0"
 authors = ["MOZGIII <mike-n@narod.ru>"]
 edition = "2018"
+license = "MIT"
+description = "Opinionated slog drains builder, configurable via env vars."
+repository = "https://github.com/MOZGIII/slog-env-cfg"
+keywords = ["slog", "env"]
+categories = ["config", "development-tools::debugging"]
 
 [dependencies]
 slog = "2.4"
