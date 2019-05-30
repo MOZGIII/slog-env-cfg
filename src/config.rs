@@ -1,6 +1,7 @@
-
 use slog::Drain;
 use std::str::FromStr;
+
+#[derive(Debug, PartialEq, Clone, Copy)]
 pub enum LogFormat {
     Terminal,
     Json,
@@ -18,6 +19,7 @@ impl FromStr for LogFormat {
     }
 }
 
+#[derive(Debug, PartialEq, Clone)]
 pub struct Config {
     pub format: LogFormat,
 }
