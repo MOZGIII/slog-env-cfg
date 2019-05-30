@@ -32,7 +32,7 @@ impl Config {
     }
 
     fn build_terminal(&self) -> impl slog::Drain<Ok = (), Err = slog::Never> {
-        let decorator = slog_term::PlainDecorator::new(std::io::stdout());
+        let decorator = slog_term::TermDecorator::new().stdout().build();
         slog_term::CompactFormat::new(decorator).build().fuse()
     }
 
