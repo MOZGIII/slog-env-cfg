@@ -8,6 +8,7 @@ description = "Opinionated slog drains builder, configurable via env vars."
 repository = "https://github.com/MOZGIII/slog-env-cfg"
 keywords = ["slog", "env"]
 categories = ["config", "development-tools::debugging"]
+readme = "README.md"
 
 [dependencies]
 slog = "2.4"
