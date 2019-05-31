@@ -1,6 +1,7 @@
 use crate::{Config, LogFormat, Result};
 use std::env;
 
+/// Build LogFormat from env vars.
 pub fn log_format_from_env(key: &str, default: LogFormat) -> Result<LogFormat> {
     match env::var(key) {
         Ok(val) => {
@@ -12,6 +13,7 @@ pub fn log_format_from_env(key: &str, default: LogFormat) -> Result<LogFormat> {
     }
 }
 
+/// Build Config from env vars.
 pub fn config_from_env() -> Result<Config> {
     let format: LogFormat = log_format_from_env("LOG_FORMAT", LogFormat::Terminal)?;
     Ok(Config { format })

@@ -1,6 +1,7 @@
 use slog::Drain;
 use std::str::FromStr;
 
+/// Supported log formats.
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub enum LogFormat {
     Terminal,
@@ -19,12 +20,17 @@ impl FromStr for LogFormat {
     }
 }
 
+/// Holds the configuration parameters.
+/// Used to build `Drain`s.
 #[derive(Debug, PartialEq, Clone)]
 pub struct Config {
     pub format: LogFormat,
 }
 
 impl Config {
+    /// Builds a `Drain` according to the specified parameters.
+    /// `Drain` will be fused and thread-safe - ready to use with
+    /// `slog::Logger`.
     pub fn build(&self) -> impl slog::Drain<Ok = (), Err = slog::Never> {
         let drain: Box<dyn slog::Drain<Ok = (), Err = slog::Never> + Send> = match self.format {
             LogFormat::Terminal => Box::new(self.build_terminal()),
