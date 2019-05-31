@@ -19,47 +19,59 @@ pub fn config_from_env() -> Result<Config> {
     Ok(Config { format })
 }
 
-#[test]
-fn env_test_term() {
-    std::env::set_var("LOG_FORMAT", "term");
-    assert_eq!(
-        config_from_env().unwrap(),
-        Config {
-            format: LogFormat::Terminal
-        }
-    );
-}
 
-#[test]
-fn env_test_json() {
-    std::env::set_var("LOG_FORMAT", "json");
-    assert_eq!(
-        config_from_env().unwrap(),
-        Config {
-            format: LogFormat::Json
-        }
-    );
-}
+#[cfg(test)]
+mod test {
+    use super::*;
+    use serial_test_derive::serial;
 
-#[test]
-fn env_test_unset() {
-    std::env::remove_var("LOG_FORMAT");
-    assert_eq!(
-        config_from_env().unwrap(),
-        Config {
-            format: LogFormat::Terminal
-        }
-    );
-}
+    #[serial]
+    #[test]
+    fn log_format_term() {
+        std::env::set_var("LOG_FORMAT", "term");
+        assert_eq!(
+            config_from_env().unwrap(),
+            Config {
+                format: LogFormat::Terminal
+            }
+        );
+    }
 
-#[test]
-fn env_test_empty() {
-    std::env::set_var("LOG_FORMAT", "");
-    assert!(config_from_env().is_err());
-}
+    #[serial]
+    #[test]
+    fn log_format_json() {
+        std::env::set_var("LOG_FORMAT", "json");
+        assert_eq!(
+            config_from_env().unwrap(),
+            Config {
+                format: LogFormat::Json
+            }
+        );
+    }
 
-#[test]
-fn env_test_invalid() {
-    std::env::set_var("LOG_FORMAT", "invalid");
-    assert!(config_from_env().is_err());
+    #[serial]
+    #[test]
+    fn log_format_unset() {
+        std::env::remove_var("LOG_FORMAT");
+        assert_eq!(
+            config_from_env().unwrap(),
+            Config {
+                format: LogFormat::Terminal
+            }
+        );
+    }
+
+    #[serial]
+    #[test]
+    fn log_format_empty() {
+        std::env::set_var("LOG_FORMAT", "");
+        assert!(config_from_env().is_err());
+    }
+
+    #[serial]
+    #[test]
+    fn log_format_invalid() {
+        std::env::set_var("LOG_FORMAT", "invalid");
+        assert!(config_from_env().is_err());
+    }
 }
