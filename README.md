@@ -7,7 +7,7 @@ Opinionated slog drains builder, configurable via env vars.
 
 ## Usage
 
-Logging is done to stdout, and configure at runtime via `LOG_FORMAT` environment variable.
+This crate builds an [slog `Drain`](https://docs.rs/slog/2/slog/trait.Drain.html) that writes to stdout. It's designed to be easy to use and with sane defaults. The format of the log records is configurable at runtime via `LOG_FORMAT` environment variable.
 
 Possible values for `LOG_FORMAT` are:
 
