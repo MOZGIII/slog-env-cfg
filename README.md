@@ -2,6 +2,7 @@
 
 [![crates.io](https://img.shields.io/crates/v/slog-env-cfg.svg)](https://crates.io/crates/slog-env-cfg)
 [![docs.rs](https://docs.rs/slog-env-cfg/badge.svg)](https://docs.rs/slog-env-cfg)
+[![Build Status](https://travis-ci.org/MOZGIII/slog-env-cfg.svg?branch=master)](https://travis-ci.org/MOZGIII/slog-env-cfg)
 
 Opinionated slog drains builder, configurable via env vars.
 
