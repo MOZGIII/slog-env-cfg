@@ -5,7 +5,7 @@
 
 Opinionated slog drains builder, configurable via env vars.
 
-## Usage
+## Description
 
 This crate builds an [slog `Drain`](https://docs.rs/slog/2/slog/trait.Drain.html) that writes to stdout. It's designed to be easy to use and with sane defaults. The format of the log records is configurable at runtime via `LOG_FORMAT` environment variable.
 
@@ -20,6 +20,8 @@ so the `LOG_FORMAT=json` can be set. The configuration is runtime, so you only n
 
 This crate aims to be an opinionated solution, and no other configuration is available so far.
 Yet, I'm open to adding other tweaks if they're justified.
+
+## Usage
 
 Here's a minimal complete `main.rs` example:
 
