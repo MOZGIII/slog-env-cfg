@@ -9,9 +9,7 @@ Logging is done to stdout, and configure at runtime via `LOG_FORMAT` environment
 Possible values for `LOG_FORMAT` are:
 
 - `json`
-- `terminal`
-
-`terminal` is the default.
+- `terminal` (default)
 
 This crate aims to be an opinionated solution, and no other configuration is available so far.
 Yet, I'm open to adding other tweaks if they're justified.
