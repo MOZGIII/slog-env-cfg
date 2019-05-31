@@ -6,9 +6,9 @@
 //! # fn main() -> Result<(), Box<std::error::Error>> {
 //! // Read configuration from environment.
 //! let cfg = slog_env_cfg::config_from_env()?;
-//! // Build an slog drain using the provided configuration.
+//! // Build a slog drain using the provided configuration.
 //! let drain = cfg.build();
-//! // Use the darin to create the logger as usual.
+//! // Use the darin to create a logger as usual.
 //! let root = slog::Logger::root(drain, o!());
 //! // Log something!
 //! info!(root, "formatted: {}", 1; "log-key" => true);
