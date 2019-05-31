@@ -2,7 +2,7 @@ use slog::Drain;
 use std::str::FromStr;
 
 /// Supported log formats.
-#[derive(Debug, PartialEq, Clone, Copy)]
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub enum LogFormat {
     Terminal,
     Json,
