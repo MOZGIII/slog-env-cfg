@@ -12,8 +12,8 @@ This crate builds an [slog `Drain`](https://docs.rs/slog/2/slog/trait.Drain.html
 
 Possible values for `LOG_FORMAT` are:
 
-- `json`
 - `terminal` (default)
+- `json`
 
 The idea is that in development environment, where you just run the executable manually and in the absense of centralized logging,
 you would rely on human-readable log output. At deployment, on the contrary, cenralized logging system can make use of JSON-formatted
