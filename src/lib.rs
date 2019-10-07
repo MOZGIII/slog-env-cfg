@@ -4,10 +4,8 @@
 //! # #[macro_use]
 //! # extern crate slog;
 //! # fn main() -> Result<(), Box<std::error::Error>> {
-//! // Read configuration from environment.
-//! let cfg = slog_env_cfg::config_from_env()?;
-//! // Build a slog drain using the provided configuration.
-//! let drain = cfg.build();
+//! // Read the configuration from environment and build slog drain.
+//! let drain = slog_env_cfg::drain_from_env()?;
 //! // Use the darin to create a logger as usual.
 //! let root = slog::Logger::root(drain, o!());
 //! // Log something!
