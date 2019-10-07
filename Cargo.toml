@@ -1,6 +1,6 @@
 [package]
 name = "slog-env-cfg"
-version = "0.1.4"
+version = "0.2.0"
 authors = ["MOZGIII <mike-n@narod.ru>"]
 edition = "2018"
 license = "MIT"
