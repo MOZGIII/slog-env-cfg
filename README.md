@@ -32,8 +32,7 @@ Here's a minimal complete `main.rs` example:
 extern crate slog;
 
 fn main() {
-    let drain = slog_env_cfg::drain_from_env().expect("initialization error");
-    let root = slog::Logger::root(drain, o!());
+    let drain = slog_env_cfg::logger_from_env(o!()).expect("initialization error");
     info!(root, "formatted: {}", 1; "log-key" => true);
 }
 ```
