@@ -14,7 +14,7 @@ readme = "README.md"
 travis-ci = { repository = "MOZGIII/slog-env-cfg", branch = "master" }
 
 [dependencies]
-slog = "2.4"
+slog = "2.5"
 slog-async = "2.3"
 slog-term = "2.4"
 slog-json = "2.3"
