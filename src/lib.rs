@@ -26,5 +26,7 @@ pub use config::*;
 
 pub use slog::Drain;
 
+pub type Logger = slog::Logger<dyn slog::Drain<Ok = (), Err = slog::Never>>;
+
 /// This crate's Result type alias.
 pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
