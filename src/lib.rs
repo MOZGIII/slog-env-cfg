@@ -27,6 +27,9 @@ pub use env::*;
 mod config;
 pub use config::*;
 
+mod standard;
+pub use standard::*;
+
 pub use slog::Drain;
 
 pub type Logger = slog::Logger<dyn slog::Drain<Ok = (), Err = slog::Never>>;
