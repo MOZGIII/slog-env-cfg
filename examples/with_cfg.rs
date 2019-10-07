@@ -1,5 +1,4 @@
-#[macro_use]
-extern crate slog;
+use slog::{info, o};
 
 fn main() {
     let cfg = slog_env_cfg::config_from_env().expect("initialization error");

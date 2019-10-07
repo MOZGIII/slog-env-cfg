@@ -1,8 +1,7 @@
 //! Example
 //!
 //! ```no_run
-//! # #[macro_use]
-//! # extern crate slog;
+//! # use slog::{info, o};
 //! # fn main() -> Result<(), Box<std::error::Error>> {
 //! // Read the configuration from environment and build a logger.
 //! let root = slog_env_cfg::logger_from_env(o!())?;

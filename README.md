@@ -28,8 +28,7 @@ Yet, I'm open to adding other tweaks if they're justified.
 Here's a minimal complete `main.rs` example:
 
 ```rust
-#[macro_use]
-extern crate slog;
+use slog::{info, o};
 
 fn main() {
     let drain = slog_env_cfg::logger_from_env(o!()).expect("initialization error");

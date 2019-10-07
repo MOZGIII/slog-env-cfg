@@ -1,5 +1,4 @@
-#[macro_use]
-extern crate slog;
+use slog::{info, o};
 
 fn main() {
     let root = slog_env_cfg::logger_from_env(o!()).expect("initialization error");
