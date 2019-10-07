@@ -32,7 +32,7 @@ pub fn log_format_from_env_with_default(
     }
 }
 
-/// Build Config use the `LOG_FORMAT` env var.
+/// Build Config using the `LOG_FORMAT` env var.
 pub fn config_from_env() -> Result<Config, LogFormatFromEnvWithDefaultError> {
     let format: LogFormat = log_format_from_env_with_default("LOG_FORMAT", LogFormat::Terminal)?;
     Ok(Config { format })
