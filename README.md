@@ -15,8 +15,8 @@ Possible values for `LOG_FORMAT` are:
 - `terminal` (default)
 - `json`
 
-The idea is that in development environment, where you just run the executable manually and in the absense of centralized logging,
-you would rely on human-readable log output. At deployment, on the contrary, cenralized logging system can make use of JSON-formatted
+The idea is that in development environment, where you just run the executable manually and in the absence of centralized logging,
+you would rely on human-readable log output. At deployment, on the contrary, centralized logging system can make use of JSON-formatted
 logs, so the `LOG_FORMAT=json` can be set. The configuration is at runtime, so you only need to manage a single build artifact for both
 use cases.
 
