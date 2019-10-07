@@ -1,4 +1,8 @@
 use crate::*;
+use std::sync::Arc;
+
+// Re-export the `slog` API parts that appear in our API.
+pub use slog::SendSyncRefUnwindSafeDrain;
 
 pub const STANDARD_LOG_FORMAT_ENV_KEY: &'static str = "LOG_FORMAT";
 
@@ -9,10 +13,30 @@ pub fn config_from_env() -> Result<Config, LogFormatFromEnvWithDefaultError> {
     Ok(Config { format })
 }
 
-/// Build slog `Drain` using the `STANDARD_LOG_FORMAT_ENV_KEY` env var.
-pub fn drain_from_env(
-) -> Result<impl slog::Drain<Ok = (), Err = slog::Never>, LogFormatFromEnvWithDefaultError> {
+/// Build slog `Drain` (more specificly `SendSyncRefUnwindSafeDrain`)
+/// using the `STANDARD_LOG_FORMAT_ENV_KEY` env var.
+pub fn drain_from_env() -> Result<
+    impl SendSyncRefUnwindSafeDrain<Ok = (), Err = slog::Never>,
+    LogFormatFromEnvWithDefaultError,
+> {
     Ok(config_from_env()?.build())
+}
+
+/// `Logger` is a convenience type alias for the `slog::Logger`.
+/// You can use it to pass around the `Logger` built with this crate in your
+/// app code.
+pub type Logger =
+    slog::Logger<Arc<dyn slog::SendSyncRefUnwindSafeDrain<Ok = (), Err = slog::Never>>>;
+
+/// Build slog `Logger` using the `STANDARD_LOG_FORMAT_ENV_KEY` env var.
+pub fn logger_from_env<T>(
+    values: slog::OwnedKV<T>,
+) -> Result<Logger, LogFormatFromEnvWithDefaultError>
+where
+    T: slog::SendSyncRefUnwindSafeKV + 'static,
+{
+    let drain = drain_from_env()?;
+    Ok(slog::Logger::root(drain, values))
 }
 
 #[cfg(test)]
