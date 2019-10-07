@@ -1,3 +1,4 @@
+use crate::InvalidLogFormat;
 use slog::Drain;
 use std::str::FromStr;
 
@@ -9,13 +10,13 @@ pub enum LogFormat {
 }
 
 impl FromStr for LogFormat {
-    type Err = &'static str;
+    type Err = InvalidLogFormat;
 
     fn from_str(item: &str) -> Result<Self, Self::Err> {
         match item.to_lowercase().as_ref() {
             "terminal" | "term" => Ok(LogFormat::Terminal),
             "json" => Ok(LogFormat::Json),
-            _ => Err("invalid log format"),
+            _ => Err(InvalidLogFormat),
         }
     }
 }

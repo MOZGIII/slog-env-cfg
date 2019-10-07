@@ -1,20 +1,23 @@
-use crate::{Config, LogFormat, Result};
+use crate::{Config, InvalidLogFormat, LogFormat, LogFormatFromEnvError};
 use std::env;
 
 /// Build LogFormat from env vars.
-pub fn log_format_from_env(key: &str, default: LogFormat) -> Result<LogFormat> {
+pub fn log_format_from_env(
+    key: &str,
+    default: LogFormat,
+) -> Result<LogFormat, LogFormatFromEnvError> {
     match env::var(key) {
-        Ok(val) => {
-            let parsed: LogFormat = val.parse()?;
-            Ok(parsed)
-        }
+        Ok(val) => match val.parse() {
+            Ok(format) => Ok(format),
+            Err(_err @ InvalidLogFormat) => Err(LogFormatFromEnvError::InvalidFormat(val)),
+        },
         Err(env::VarError::NotPresent) => Ok(default),
-        Err(val) => Err(val)?,
+        Err(env::VarError::NotUnicode(val)) => Err(LogFormatFromEnvError::NotUnicode(val)),
     }
 }
 
 /// Build Config from env vars.
-pub fn config_from_env() -> Result<Config> {
+pub fn config_from_env() -> Result<Config, LogFormatFromEnvError> {
     let format: LogFormat = log_format_from_env("LOG_FORMAT", LogFormat::Terminal)?;
     Ok(Config { format })
 }
