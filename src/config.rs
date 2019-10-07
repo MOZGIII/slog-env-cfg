@@ -57,7 +57,6 @@ fn build_test_terminal() {
     cfg.build();
 }
 
-
 #[test]
 fn build_test_json() {
     let cfg = Config {

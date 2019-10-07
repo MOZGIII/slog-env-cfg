@@ -19,7 +19,6 @@ pub fn config_from_env() -> Result<Config> {
     Ok(Config { format })
 }
 
-
 #[cfg(test)]
 mod test {
     use super::*;
