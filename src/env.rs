@@ -41,6 +41,7 @@ pub fn config_from_env() -> Result<Config, LogFormatFromEnvWithDefaultError> {
 #[cfg(test)]
 mod test {
     use super::*;
+    use matches::assert_matches;
     use serial_test_derive::serial;
 
     #[serial]
@@ -83,13 +84,19 @@ mod test {
     #[test]
     fn log_format_empty() {
         std::env::set_var("LOG_FORMAT", "");
-        assert!(config_from_env().is_err());
+        assert_matches!(
+            config_from_env(),
+            Err(LogFormatFromEnvWithDefaultError::InvalidFormat(ref s)) if s == ""
+        );
     }
 
     #[serial]
     #[test]
     fn log_format_invalid() {
         std::env::set_var("LOG_FORMAT", "invalid");
-        assert!(config_from_env().is_err());
+        assert_matches!(
+            config_from_env(),
+            Err(LogFormatFromEnvWithDefaultError::InvalidFormat(ref s)) if s == "invalid"
+        );
     }
 }
