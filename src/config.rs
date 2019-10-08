@@ -23,10 +23,12 @@ pub struct Config {
 impl Config {
     /// Build a `Drain` according to the specified parameters.
     /// The resulting `Drain` is ready to use with `slog::Logger::root`.
+    #[inline]
     pub fn build(&self) -> impl SendSyncRefUnwindSafeDrain<Ok = (), Err = Never> {
         drain_async_fuse(self.wrap_with_envlogger(self.build_format_drain()))
     }
 
+    #[inline]
     fn wrap_with_envlogger<D>(&self, drain: D) -> EitherDrain<D, slog_envlogger::EnvLogger<D>>
     where
         D: Drain<Ok = (), Err = Never>,
@@ -42,6 +44,7 @@ impl Config {
         EitherDrain::Right(builder.build())
     }
 
+    #[inline]
     fn build_format_drain(
         &self,
     ) -> EitherDrain<impl Drain<Ok = (), Err = Never>, impl Drain<Ok = (), Err = Never>> {
@@ -51,11 +54,13 @@ impl Config {
         }
     }
 
+    #[inline]
     fn build_terminal(&self) -> impl Drain<Ok = (), Err = Never> {
         let decorator = slog_term::TermDecorator::new().stdout().build();
         slog_term::CompactFormat::new(decorator).build().fuse()
     }
 
+    #[inline]
     fn build_json(&self) -> impl Drain<Ok = (), Err = Never> {
         slog_json::Json::default(std::io::stdout()).fuse()
     }
