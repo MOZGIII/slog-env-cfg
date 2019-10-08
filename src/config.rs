@@ -1,6 +1,9 @@
+use crate::util::drain_async_fuse;
 use crate::InvalidLogFormat;
-use slog::Drain;
 use std::str::FromStr;
+
+// Re-export the `slog` API parts that appear in our API.
+pub use slog::{Drain, SendSyncRefUnwindSafeDrain};
 
 /// Supported log formats.
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
@@ -29,23 +32,31 @@ pub struct Config {
 }
 
 impl Config {
-    /// Builds a `Drain` according to the specified parameters.
-    /// `Drain` will be fused and thread-safe - ready to use with
-    /// `slog::Logger`.
-    pub fn build(&self) -> impl slog::Drain<Ok = (), Err = slog::Never> {
-        let drain: Box<dyn slog::Drain<Ok = (), Err = slog::Never> + Send> = match self.format {
+    /// Build a `Drain` according to the specified parameters.
+    /// The resulting `Drain` can be wrapped with `slog_async::Async` and
+    /// `fuse`'d to be ready for passing it to the `slog::Logger::root`.
+    /// For convenience, we also provide the `build_ready` method that takes
+    /// care of that.
+    pub fn build(&self) -> Box<dyn Drain<Ok = (), Err = slog::Never> + Send> {
+        match self.format {
             LogFormat::Terminal => Box::new(self.build_terminal()),
             LogFormat::Json => Box::new(self.build_json()),
-        };
-        slog_async::Async::new(drain).build().fuse()
+        }
     }
 
-    fn build_terminal(&self) -> impl slog::Drain<Ok = (), Err = slog::Never> {
+    /// Build a `Drain` according to the specified parameters and wrap it to
+    /// prepare for use with `slog::Logger::root`.
+    /// Use this function for convenience, or `build` for a lower level.
+    pub fn build_ready(&self) -> impl SendSyncRefUnwindSafeDrain<Ok = (), Err = slog::Never> {
+        drain_async_fuse(self.build())
+    }
+
+    fn build_terminal(&self) -> impl Drain<Ok = (), Err = slog::Never> {
         let decorator = slog_term::TermDecorator::new().stdout().build();
         slog_term::CompactFormat::new(decorator).build().fuse()
     }
 
-    fn build_json(&self) -> impl slog::Drain<Ok = (), Err = slog::Never> {
+    fn build_json(&self) -> impl Drain<Ok = (), Err = slog::Never> {
         slog_json::Json::default(std::io::stdout()).fuse()
     }
 }

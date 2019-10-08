@@ -15,11 +15,14 @@ pub fn config_from_env() -> Result<Config, LogFormatFromEnvWithDefaultError> {
 
 /// Build slog `Drain` (more specificly `SendSyncRefUnwindSafeDrain`)
 /// using the `STANDARD_LOG_FORMAT_ENV_KEY` env var.
+/// The resulting `Drain` is ready to be passed to the logger (i.e. it is
+/// wrapped with `slog_async::Async`). To build a raw, unwrapped `Drain` use
+/// `config_from_env` and manually drive the build process from there.
 pub fn drain_from_env() -> Result<
     impl SendSyncRefUnwindSafeDrain<Ok = (), Err = slog::Never>,
     LogFormatFromEnvWithDefaultError,
 > {
-    Ok(config_from_env()?.build())
+    Ok(config_from_env()?.build_ready())
 }
 
 /// `Logger` is a convenience type alias for the `slog::Logger`.
