@@ -1,6 +1,6 @@
 use std::ffi::OsString;
 
-/// InvalidLogFormat is an error returned on a LogFormat parse attempt when an
+/// `InvalidLogFormat` is an error returned on a `LogFormat` parse attempt when an
 /// invalid logger format name is passed.
 #[derive(Debug)]
 pub struct InvalidLogFormat;
@@ -13,7 +13,7 @@ impl std::fmt::Display for InvalidLogFormat {
 
 impl std::error::Error for InvalidLogFormat {}
 
-/// LogFormatFromEnvError captures all possible errors that can occur when
+/// `LogFormatFromEnvError` captures all possible errors that can occur when
 /// log format is constructred from the system environment variables.
 #[derive(Debug)]
 pub enum LogFormatFromEnvError {
@@ -38,9 +38,9 @@ impl std::fmt::Display for LogFormatFromEnvError {
 
 impl std::error::Error for LogFormatFromEnvError {}
 
-/// LogFormatFromEnvWithDefaultError captures all possible errors that can occur
-/// when log format is constructred from the system environment variables with
-/// error cases handled by default assignment logic excluded.
+/// `LogFormatFromEnvWithDefaultError` captures all possible errors that can
+/// occur when log format is constructred from the system environment variables,
+/// with error cases handled by default assignment logic excluded.
 #[derive(Debug)]
 pub enum LogFormatFromEnvWithDefaultError {
     NotUnicode(OsString),
