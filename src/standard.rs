@@ -51,7 +51,7 @@ mod test {
     #[serial]
     #[test]
     fn log_format_term() {
-        std::env::set_var("LOG_FORMAT", "term");
+        std::env::set_var(STANDARD_LOG_FORMAT_ENV_KEY, "term");
         assert_eq!(
             config_from_env().unwrap(),
             Config {
@@ -63,7 +63,7 @@ mod test {
     #[serial]
     #[test]
     fn log_format_json() {
-        std::env::set_var("LOG_FORMAT", "json");
+        std::env::set_var(STANDARD_LOG_FORMAT_ENV_KEY, "json");
         assert_eq!(
             config_from_env().unwrap(),
             Config {
@@ -75,7 +75,7 @@ mod test {
     #[serial]
     #[test]
     fn log_format_unset() {
-        std::env::remove_var("LOG_FORMAT");
+        std::env::remove_var(STANDARD_LOG_FORMAT_ENV_KEY);
         assert_eq!(
             config_from_env().unwrap(),
             Config {
@@ -87,7 +87,7 @@ mod test {
     #[serial]
     #[test]
     fn log_format_empty() {
-        std::env::set_var("LOG_FORMAT", "");
+        std::env::set_var(STANDARD_LOG_FORMAT_ENV_KEY, "");
         assert_matches!(
             config_from_env(),
             Err(LogFormatFromEnvWithDefaultError::InvalidFormat(ref s)) if s == ""
@@ -97,7 +97,7 @@ mod test {
     #[serial]
     #[test]
     fn log_format_invalid() {
-        std::env::set_var("LOG_FORMAT", "invalid");
+        std::env::set_var(STANDARD_LOG_FORMAT_ENV_KEY, "invalid");
         assert_matches!(
             config_from_env(),
             Err(LogFormatFromEnvWithDefaultError::InvalidFormat(ref s)) if s == "invalid"
