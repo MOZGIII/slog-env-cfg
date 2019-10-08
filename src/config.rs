@@ -18,6 +18,11 @@ pub struct Config {
 
     /// Envlogger configuration to use (usually passed via `RUST_LOG` env var).
     pub envlogger_filters: Option<String>,
+
+    /// If no configuration is passed to envlogger, it adds the "error" filter
+    /// by default. This allows for overriding this default with something
+    /// more suitable.
+    pub envlogger_override_default_filter: Option<String>,
 }
 
 impl Config {
@@ -38,9 +43,15 @@ impl Config {
         }
 
         let mut builder = slog_envlogger::LogBuilder::new(drain);
-        if let Some(val) = &self.envlogger_filters {
-            builder = builder.parse(val)
+        match self.envlogger_filters {
+            Some(ref val) if val != "" => builder = builder.parse(val),
+            _ => {
+                if let Some(ref val) = self.envlogger_override_default_filter {
+                    builder = builder.parse(val)
+                }
+            }
         }
+
         EitherDrain::Right(builder.build())
     }
 
@@ -72,6 +83,7 @@ fn build_test_terminal() {
         format: LogFormat::Terminal,
         disable_envlogger: false,
         envlogger_filters: None,
+        envlogger_override_default_filter: None,
     };
     cfg.build();
 }
@@ -82,6 +94,7 @@ fn build_test_json() {
         format: LogFormat::Json,
         disable_envlogger: false,
         envlogger_filters: None,
+        envlogger_override_default_filter: None,
     };
     cfg.build();
 }

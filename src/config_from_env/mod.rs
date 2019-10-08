@@ -7,16 +7,17 @@ pub const LOG_FORMAT_ENV_KEY: &'static str = "LOG_FORMAT";
 pub const DISABLE_ENVLOGGER_ENV_KEY: &'static str = "DISABLE_ENVLOGGER";
 pub const ENVLOGGER_FILTERS_ENV_KEY: &'static str = "RUST_LOG";
 
-/// Build `Config` using the `LOG_FORMAT_ENV_KEY` env var.
+/// Build `Config` using the env vars and opinionated defaults.
 pub fn config_from_env() -> Result<Config, ConfigFromEnvError> {
     let format = parse_from_env(LOG_FORMAT_ENV_KEY)?.unwrap_or(LogFormat::Terminal);
     let disable_envlogger = parse_from_env(DISABLE_ENVLOGGER_ENV_KEY)?.unwrap_or(false);
-    let envlogger_filters =
-        parse_from_env(ENVLOGGER_FILTERS_ENV_KEY)?.or_else(|| Some("trace".to_string()));
+    let envlogger_filters = parse_from_env(ENVLOGGER_FILTERS_ENV_KEY)?;
+    let envlogger_override_default_filter = Some("debug".to_string());
     Ok(Config {
         format,
         disable_envlogger,
         envlogger_filters,
+        envlogger_override_default_filter,
     })
 }
 
@@ -35,7 +36,8 @@ mod test {
             Config {
                 format: LogFormat::Terminal,
                 disable_envlogger: false,
-                envlogger_filters: Some("trace".to_string()),
+                envlogger_filters: None,
+                envlogger_override_default_filter: Some("trace".to_string()),
             }
         );
     }
@@ -49,7 +51,8 @@ mod test {
             Config {
                 format: LogFormat::Json,
                 disable_envlogger: false,
-                envlogger_filters: Some("trace".to_string()),
+                envlogger_filters: None,
+                envlogger_override_default_filter: Some("trace".to_string()),
             }
         );
     }
@@ -63,7 +66,8 @@ mod test {
             Config {
                 format: LogFormat::Terminal,
                 disable_envlogger: false,
-                envlogger_filters: Some("trace".to_string()),
+                envlogger_filters: None,
+                envlogger_override_default_filter: Some("trace".to_string()),
             }
         );
     }
