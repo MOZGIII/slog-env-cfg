@@ -1,3 +1,4 @@
+use crate::parse_from_env::ParseFromEnvError;
 use crate::*;
 use std::convert::Infallible;
 use std::str::ParseBoolError;

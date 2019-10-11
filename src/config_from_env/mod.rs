@@ -1,3 +1,4 @@
+use crate::parse_from_env::parse_from_env;
 use crate::*;
 
 mod error;
@@ -27,6 +28,7 @@ pub fn config_from_env() -> Result<Config, ConfigFromEnvError> {
 #[cfg(test)]
 mod test {
     use super::*;
+    use crate::parse_from_env::ParseFromEnvError;
     use matches::assert_matches;
     use serial_test_derive::serial;
 

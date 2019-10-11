@@ -13,9 +13,6 @@
 
 #![warn(rust_2018_idioms)]
 
-mod parse_from_env;
-pub use parse_from_env::*;
-
 mod log_format;
 pub use log_format::*;
 
@@ -29,3 +26,4 @@ mod convenience;
 pub use convenience::*;
 
 mod drain;
+mod parse_from_env;
