@@ -1,5 +1,4 @@
 use crate::drain::EitherDrain;
-use crate::util::drain_async_fuse;
 use crate::*;
 use slog::{Drain, Never, SendSyncRefUnwindSafeDrain};
 
@@ -30,7 +29,19 @@ impl Config {
     /// The resulting `Drain` is ready to use with `slog::Logger::root`.
     #[inline]
     pub fn build(&self) -> impl SendSyncRefUnwindSafeDrain<Ok = (), Err = Never> {
-        drain_async_fuse(self.wrap_with_envlogger(self.build_format_drain()))
+        let drain = self.build_format_drain();
+        let drain = self.wrap_with_envlogger(drain);
+        let drain = self.wrap_with_async(drain);
+        drain
+    }
+
+    #[inline]
+    fn wrap_with_async<D>(&self, drain: D) -> impl Drain<Ok = (), Err = Never>
+    where
+        D: slog::Drain<Err = slog::Never, Ok = ()> + Send + 'static,
+    {
+        use slog_async::Async;
+        Async::new(drain).build().fuse()
     }
 
     #[inline]

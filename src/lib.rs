@@ -29,4 +29,3 @@ mod convenience;
 pub use convenience::*;
 
 mod drain;
-mod util;
