@@ -4,17 +4,19 @@ use crate::*;
 mod error;
 pub use error::*;
 
-pub const LOG_FORMAT_ENV_KEY: &'static str = "LOG_FORMAT";
-pub const DISABLE_ENVLOGGER_ENV_KEY: &'static str = "DISABLE_ENVLOGGER";
-pub const ENVLOGGER_FILTERS_ENV_KEY: &'static str = "RUST_LOG";
+pub mod env_key {
+    pub const LOG_FORMAT: &'static str = "LOG_FORMAT";
+    pub const DISABLE_ENVLOGGER: &'static str = "DISABLE_ENVLOGGER";
+    pub const ENVLOGGER_FILTERS: &'static str = "RUST_LOG";
+}
 
 pub const ENVLOGGER_OVERRIDE_DEFAULT_FILTER_DEFAULT: &'static str = "debug";
 
 /// Build `Config` using the env vars and opinionated defaults.
 pub fn config_from_env() -> Result<Config, ConfigFromEnvError> {
-    let format = parse_from_env(LOG_FORMAT_ENV_KEY)?.unwrap_or(LogFormat::Terminal);
-    let disable_envlogger = parse_from_env(DISABLE_ENVLOGGER_ENV_KEY)?.unwrap_or(false);
-    let envlogger_filters = parse_from_env(ENVLOGGER_FILTERS_ENV_KEY)?;
+    let format = parse_from_env(env_key::LOG_FORMAT)?.unwrap_or(LogFormat::Terminal);
+    let disable_envlogger = parse_from_env(env_key::DISABLE_ENVLOGGER)?.unwrap_or(false);
+    let envlogger_filters = parse_from_env(env_key::ENVLOGGER_FILTERS)?;
     let envlogger_override_default_filter =
         Some(ENVLOGGER_OVERRIDE_DEFAULT_FILTER_DEFAULT.to_string());
     Ok(Config {
@@ -33,9 +35,9 @@ mod test {
     use serial_test_derive::serial;
 
     fn reset_env() {
-        std::env::remove_var(LOG_FORMAT_ENV_KEY);
-        std::env::remove_var(DISABLE_ENVLOGGER_ENV_KEY);
-        std::env::remove_var(ENVLOGGER_FILTERS_ENV_KEY);
+        std::env::remove_var(env_key::LOG_FORMAT);
+        std::env::remove_var(env_key::DISABLE_ENVLOGGER);
+        std::env::remove_var(env_key::ENVLOGGER_FILTERS);
     }
 
     #[serial]
@@ -59,7 +61,7 @@ mod test {
     #[test]
     fn log_format_term() {
         reset_env();
-        std::env::set_var(LOG_FORMAT_ENV_KEY, "term");
+        std::env::set_var(env_key::LOG_FORMAT, "term");
         assert_eq!(
             config_from_env().unwrap(),
             Config {
@@ -77,7 +79,7 @@ mod test {
     #[test]
     fn log_format_json() {
         reset_env();
-        std::env::set_var(LOG_FORMAT_ENV_KEY, "json");
+        std::env::set_var(env_key::LOG_FORMAT, "json");
         assert_eq!(
             config_from_env().unwrap(),
             Config {
@@ -95,7 +97,7 @@ mod test {
     #[test]
     fn log_format_unset() {
         reset_env();
-        std::env::remove_var(LOG_FORMAT_ENV_KEY);
+        std::env::remove_var(env_key::LOG_FORMAT);
         assert_eq!(
             config_from_env().unwrap(),
             Config {
@@ -113,7 +115,7 @@ mod test {
     #[test]
     fn log_format_empty() {
         reset_env();
-        std::env::set_var(LOG_FORMAT_ENV_KEY, "");
+        std::env::set_var(env_key::LOG_FORMAT, "");
         assert_matches!(
             config_from_env(),
             Err(ConfigFromEnvError::InvalidLogFormat(
@@ -128,7 +130,7 @@ mod test {
     #[test]
     fn log_format_invalid() {
         reset_env();
-        std::env::set_var(LOG_FORMAT_ENV_KEY, "invalid");
+        std::env::set_var(env_key::LOG_FORMAT, "invalid");
         assert_matches!(
             config_from_env(),
             Err(ConfigFromEnvError::InvalidLogFormat(
@@ -143,7 +145,7 @@ mod test {
     #[test]
     fn envlogger_filters_empty() {
         reset_env();
-        std::env::set_var(ENVLOGGER_FILTERS_ENV_KEY, "");
+        std::env::set_var(env_key::ENVLOGGER_FILTERS, "");
         assert_eq!(
             config_from_env().unwrap(),
             Config {
@@ -159,7 +161,7 @@ mod test {
     #[test]
     fn envlogger_filters_debug() {
         reset_env();
-        std::env::set_var(ENVLOGGER_FILTERS_ENV_KEY, "debug");
+        std::env::set_var(env_key::ENVLOGGER_FILTERS, "debug");
         assert_eq!(
             config_from_env().unwrap(),
             Config {
