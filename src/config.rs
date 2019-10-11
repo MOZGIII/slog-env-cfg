@@ -9,19 +9,19 @@ pub struct Config {
     /// Log format to provide.
     pub format: LogFormat,
 
-    /// Disable envlogger.
-    /// Yuo might want this for performance reasons or just for convenience:
-    /// envlogger hides log values by default, and turning the whole envlogger
+    /// Disable env logger.
+    /// You might want this for performance reasons or just for convenience:
+    /// env logger hides log values by default, and turning the whole env logger
     /// off is a simple wordaround for that behavior.
-    pub disable_envlogger: bool,
+    pub disable_env_logger: bool,
 
-    /// Envlogger configuration to use (usually passed via `RUST_LOG` env var).
-    pub envlogger_filters: Option<String>,
+    /// Env Logger configuration to use (usually passed via `RUST_LOG` env var).
+    pub env_logger_filters: Option<String>,
 
-    /// If no configuration is passed to envlogger, it adds the "error" filter
-    /// by default. This allows for overriding this default with something
-    /// more suitable.
-    pub envlogger_override_default_filter: Option<String>,
+    /// If no configuration is passed to env logger, it adds the "error" filter
+    /// by default. This allows for overriding this default with something more
+    /// suitable.
+    pub env_logger_override_default_filter: Option<String>,
 }
 
 impl Config {
@@ -30,7 +30,7 @@ impl Config {
     #[inline]
     pub fn build(&self) -> impl SendSyncRefUnwindSafeDrain<Ok = (), Err = Never> {
         let drain = self.build_format_drain();
-        let drain = self.wrap_with_envlogger(drain);
+        let drain = self.wrap_with_env_logger(drain);
         let drain = self.wrap_with_async(drain);
         drain
     }
@@ -45,19 +45,19 @@ impl Config {
     }
 
     #[inline]
-    fn wrap_with_envlogger<D>(&self, drain: D) -> EitherDrain<D, slog_envlogger::EnvLogger<D>>
+    fn wrap_with_env_logger<D>(&self, drain: D) -> EitherDrain<D, slog_envlogger::EnvLogger<D>>
     where
         D: Drain<Ok = (), Err = Never>,
     {
-        if self.disable_envlogger {
+        if self.disable_env_logger {
             return EitherDrain::Left(drain);
         }
 
         let mut builder = slog_envlogger::LogBuilder::new(drain);
-        match self.envlogger_filters {
+        match self.env_logger_filters {
             Some(ref val) if val != "" => builder = builder.parse(val),
             _ => {
-                if let Some(ref val) = self.envlogger_override_default_filter {
+                if let Some(ref val) = self.env_logger_override_default_filter {
                     builder = builder.parse(val)
                 }
             }
@@ -92,9 +92,9 @@ impl Config {
 fn build_test_terminal() {
     let cfg = Config {
         format: LogFormat::Terminal,
-        disable_envlogger: false,
-        envlogger_filters: None,
-        envlogger_override_default_filter: None,
+        disable_env_logger: false,
+        env_logger_filters: None,
+        env_logger_override_default_filter: None,
     };
     cfg.build();
 }
@@ -103,9 +103,9 @@ fn build_test_terminal() {
 fn build_test_json() {
     let cfg = Config {
         format: LogFormat::Json,
-        disable_envlogger: false,
-        envlogger_filters: None,
-        envlogger_override_default_filter: None,
+        disable_env_logger: false,
+        env_logger_filters: None,
+        env_logger_override_default_filter: None,
     };
     cfg.build();
 }

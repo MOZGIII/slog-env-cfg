@@ -6,24 +6,24 @@ pub use error::*;
 
 pub mod env_key {
     pub const LOG_FORMAT: &'static str = "LOG_FORMAT";
-    pub const DISABLE_ENVLOGGER: &'static str = "DISABLE_ENVLOGGER";
-    pub const ENVLOGGER_FILTERS: &'static str = "RUST_LOG";
+    pub const DISABLE_ENV_LOGGER: &'static str = "DISABLE_ENV_LOGGER";
+    pub const ENV_LOGGER_FILTERS: &'static str = "RUST_LOG";
 }
 
-pub const ENVLOGGER_OVERRIDE_DEFAULT_FILTER_DEFAULT: &'static str = "debug";
+pub const ENV_LOGGER_OVERRIDE_DEFAULT_FILTER_DEFAULT: &'static str = "debug";
 
 /// Build `Config` using the env vars and opinionated defaults.
 pub fn config_from_env() -> Result<Config, ConfigFromEnvError> {
     let format = parse_from_env(env_key::LOG_FORMAT)?.unwrap_or(LogFormat::Terminal);
-    let disable_envlogger = parse_from_env(env_key::DISABLE_ENVLOGGER)?.unwrap_or(false);
-    let envlogger_filters = parse_from_env(env_key::ENVLOGGER_FILTERS)?;
-    let envlogger_override_default_filter =
-        Some(ENVLOGGER_OVERRIDE_DEFAULT_FILTER_DEFAULT.to_string());
+    let disable_env_logger = parse_from_env(env_key::DISABLE_ENV_LOGGER)?.unwrap_or(false);
+    let env_logger_filters = parse_from_env(env_key::ENV_LOGGER_FILTERS)?;
+    let env_logger_override_default_filter =
+        Some(ENV_LOGGER_OVERRIDE_DEFAULT_FILTER_DEFAULT.to_string());
     Ok(Config {
         format,
-        disable_envlogger,
-        envlogger_filters,
-        envlogger_override_default_filter,
+        disable_env_logger,
+        env_logger_filters,
+        env_logger_override_default_filter,
     })
 }
 
@@ -36,8 +36,8 @@ mod test {
 
     fn reset_env() {
         std::env::remove_var(env_key::LOG_FORMAT);
-        std::env::remove_var(env_key::DISABLE_ENVLOGGER);
-        std::env::remove_var(env_key::ENVLOGGER_FILTERS);
+        std::env::remove_var(env_key::DISABLE_ENV_LOGGER);
+        std::env::remove_var(env_key::ENV_LOGGER_FILTERS);
     }
 
     #[serial]
@@ -48,10 +48,10 @@ mod test {
             config_from_env().unwrap(),
             Config {
                 format: LogFormat::Terminal,
-                disable_envlogger: false,
-                envlogger_filters: None,
-                envlogger_override_default_filter: Some(
-                    ENVLOGGER_OVERRIDE_DEFAULT_FILTER_DEFAULT.to_string()
+                disable_env_logger: false,
+                env_logger_filters: None,
+                env_logger_override_default_filter: Some(
+                    ENV_LOGGER_OVERRIDE_DEFAULT_FILTER_DEFAULT.to_string()
                 ),
             }
         );
@@ -66,10 +66,10 @@ mod test {
             config_from_env().unwrap(),
             Config {
                 format: LogFormat::Terminal,
-                disable_envlogger: false,
-                envlogger_filters: None,
-                envlogger_override_default_filter: Some(
-                    ENVLOGGER_OVERRIDE_DEFAULT_FILTER_DEFAULT.to_string()
+                disable_env_logger: false,
+                env_logger_filters: None,
+                env_logger_override_default_filter: Some(
+                    ENV_LOGGER_OVERRIDE_DEFAULT_FILTER_DEFAULT.to_string()
                 ),
             }
         );
@@ -84,10 +84,10 @@ mod test {
             config_from_env().unwrap(),
             Config {
                 format: LogFormat::Json,
-                disable_envlogger: false,
-                envlogger_filters: None,
-                envlogger_override_default_filter: Some(
-                    ENVLOGGER_OVERRIDE_DEFAULT_FILTER_DEFAULT.to_string()
+                disable_env_logger: false,
+                env_logger_filters: None,
+                env_logger_override_default_filter: Some(
+                    ENV_LOGGER_OVERRIDE_DEFAULT_FILTER_DEFAULT.to_string()
                 ),
             }
         );
@@ -102,10 +102,10 @@ mod test {
             config_from_env().unwrap(),
             Config {
                 format: LogFormat::Terminal,
-                disable_envlogger: false,
-                envlogger_filters: None,
-                envlogger_override_default_filter: Some(
-                    ENVLOGGER_OVERRIDE_DEFAULT_FILTER_DEFAULT.to_string()
+                disable_env_logger: false,
+                env_logger_filters: None,
+                env_logger_override_default_filter: Some(
+                    ENV_LOGGER_OVERRIDE_DEFAULT_FILTER_DEFAULT.to_string()
                 ),
             }
         );
@@ -143,33 +143,33 @@ mod test {
 
     #[serial]
     #[test]
-    fn envlogger_filters_empty() {
+    fn env_logger_filters_empty() {
         reset_env();
-        std::env::set_var(env_key::ENVLOGGER_FILTERS, "");
+        std::env::set_var(env_key::ENV_LOGGER_FILTERS, "");
         assert_eq!(
             config_from_env().unwrap(),
             Config {
                 format: LogFormat::Terminal,
-                disable_envlogger: false,
-                envlogger_filters: Some("".to_string()),
-                envlogger_override_default_filter: Some(ENVLOGGER_OVERRIDE_DEFAULT_FILTER_DEFAULT.to_string()),
+                disable_env_logger: false,
+                env_logger_filters: Some("".to_string()),
+                env_logger_override_default_filter: Some(ENV_LOGGER_OVERRIDE_DEFAULT_FILTER_DEFAULT.to_string()),
             }
         );
     }
 
     #[serial]
     #[test]
-    fn envlogger_filters_debug() {
+    fn env_logger_filters_debug() {
         reset_env();
-        std::env::set_var(env_key::ENVLOGGER_FILTERS, "debug");
+        std::env::set_var(env_key::ENV_LOGGER_FILTERS, "debug");
         assert_eq!(
             config_from_env().unwrap(),
             Config {
                 format: LogFormat::Terminal,
-                disable_envlogger: false,
-                envlogger_filters: Some("debug".to_string()),
-                envlogger_override_default_filter: Some(
-                    ENVLOGGER_OVERRIDE_DEFAULT_FILTER_DEFAULT.to_string()
+                disable_env_logger: false,
+                env_logger_filters: Some("debug".to_string()),
+                env_logger_override_default_filter: Some(
+                    ENV_LOGGER_OVERRIDE_DEFAULT_FILTER_DEFAULT.to_string()
                 ),
             }
         );

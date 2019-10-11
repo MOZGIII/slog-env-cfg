@@ -8,7 +8,7 @@ use slog::{info, o};
 
 fn main() {
     let mut cfg = slog_env_cfg::config_from_env().expect("initialization error");
-    cfg.disable_envlogger = true;
+    cfg.disable_env_logger = true;
     let drain = cfg.build();
     let root = slog::Logger::root(drain, o!());
     info!(root, "formatted: {}", 1; "log-key" => true);
