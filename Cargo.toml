@@ -22,5 +22,5 @@ slog-envlogger = "2.2"
 
 [dev-dependencies]
 serial_test = "0.2"
-serial_test_derive = "0.2"
+serial_test_derive = "0.3"
 matches = "0.1"
